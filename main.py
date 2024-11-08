@@ -16,20 +16,51 @@ from pathlib import Path
 from docxtpl import DocxTemplate
 from docx2pdf import convert
 
-from bill_generator import billGenerator
+from bill_generator_2 import billGenerator
 
 
 #stopping here :- append detail to mill sheet completed , import get_int_inputs and apply to all inputs
 #sort the mill , fac lists in alphabetical order
 
-class update(billGenerator):
+class update():
+    def get_integer_input(self,prompt):
+        while True:
+            user_input = input(prompt)
+            if user_input.strip() == "":  # Check if the input is empty
+                print("No input provided. Please enter a number.")
+                continue
+            try:
+                return int(user_input)  # Attempt to convert the input to an integer
+            except ValueError:
+                print("Invalid input. Please enter a valid integer.")
+
+    def get_string_input(self,prompt):
+        while True:
+            user_input = input(prompt).strip()  # Remove leading/trailing whitespace
+            if user_input == "":  # Check if the input is empty
+                print("No input provided. Please enter a non-empty string.")
+                continue
+            return user_input  # Return the valid, non-empty string
+        
+    def get_float_input(self,prompt):
+        while True:
+            user_input = input(prompt).strip()  # Remove leading/trailing whitespace
+            if user_input == "":  # Check if the input is empty
+                print("No input provided. Please enter a number.")
+                continue
+            try:
+                user_input = float(user_input)  # Attempt to convert input to a float
+                return user_input  # Exit the loop if conversion is successful
+            except ValueError:
+                print("Invalid input. Please enter a valid float.")
+
     def __init__(self):
         print('-'*50)
         print("FY 2024-25")
         print('-'*50)
         self.spreadsheet_id = '1nvdutA1w3neqZ57rlE3PH2Fm6ACPr3dKPsnrkEioMJI'  # to fetch sheets
-        self.credentials_file = 'credentials.json'
-        self.scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+        self.credentials_file = 'credentials2.json'
+        self.scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive",'https://www.googleapis.com/auth/documents']
         self.creds = ServiceAccountCredentials.from_json_keyfile_name(self.credentials_file, self.scope)
         self.client = gspread.authorize(self.creds)
 
@@ -96,7 +127,7 @@ class update(billGenerator):
             df.at[row_index,'VEHICLE NO'] = str(bill_details['VNO'])
             df.at[row_index,'BAGS'] = bill_details['BAGS']
             df.at[row_index,'SOLVEX'] = bill_details['factory_name']   
-            df.at[row_index,'VEHICLE NO'] = str(bill_details['QTL'])
+            df.at[row_index,'WEIGHT'] = str(bill_details['QTL'])
             df.at[row_index,'RATE'] = bill_details['ACTUAL RATE']
             df.at[row_index,'THROUGH'] = bill_details['THR']
         
@@ -268,14 +299,15 @@ if __name__ == '__main__':
     upc = update()
     while True:
         i=0
-        while i<1 or i>6:
-            print("\n1.Generate Bill \n2.Detail Update \n3.Amount Update \n4.Display Mill Data \n5.Display Factory Data \n6.Cancel bill in fac sheet \nANY KEY to EXIT")
+        while i<1 or i>7:
+            print("\nMAIN MENU :\n1.Generate Bill \n2.Detail Update \n3.Amount Update \n4.Display Mill Data \n5.Display Factory Data \n6.Cancel bill in fac sheet \n7.EXIT")
             print('type a number in 1,2,3,4,5,6')
             i = upc.get_integer_input("Choose a operation:- \n")
 
         if i==1:
             print("\n \n Generating New Bill \n\n")
-            bill_details = upc.generate_bill()
+            bgc = billGenerator()
+            bill_details = bgc.generate_bill()
             if bill_details:
                 upc.append_bill_to_factory_sheet(bill_details)
             else:

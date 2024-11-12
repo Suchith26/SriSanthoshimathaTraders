@@ -42,7 +42,7 @@ class billGenerator():
         print('BILL GENERATOR - CLOUD')
     
         # Path to the service account credentials JSON file
-        self.service_account_file = 'credentials2.json'
+        self.service_account_file = 'credentials.json'
 
         # Define the required scopes
         self.scopes = [

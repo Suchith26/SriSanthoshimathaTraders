@@ -59,7 +59,7 @@ class update():
         print("FY 2024-25")
         print('-'*50)
         self.spreadsheet_id = '1nvdutA1w3neqZ57rlE3PH2Fm6ACPr3dKPsnrkEioMJI'  # to fetch sheets
-        self.credentials_file = 'credentials2.json'
+        self.credentials_file = 'credentials.json'
         self.scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive",'https://www.googleapis.com/auth/documents']
         self.creds = ServiceAccountCredentials.from_json_keyfile_name(self.credentials_file, self.scope)
         self.client = gspread.authorize(self.creds)

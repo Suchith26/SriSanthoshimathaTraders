@@ -1,54 +1,61 @@
-1: test
-2: test1
-3: test2
+# 1: test
+# 2: test3
+# 3: test4
 
-# 1: Aravind
-# 2: RajaRajeshwari Acpt
-# 3: Balnagar
-4: Pedda Pally Shiva Reddy
-5: Veljal
-6: Rajapur
-7: Kondedu
-8: Thommidhi Rekula
-9: Madharam
-10: keshampet
+1: Aithole
+2: Anajayya
+3: AnanthaLakshmi Acpt
+4: Annapurna K.Nagula
+5: Aravind
 
-11: Lingampet Thirupathi Reddy
-12: B.pally
-13: Midjil
-14: Vijayalakshmi K.Nagula
-15: Annapurna K.Nagula
-16: Ravi Lingala
-17: Shyam Lingala
-18: Aithole
-19: Manikanta Telkapally
-20: Srichakra Nawabpet
-21: Sirisawada
+6: Balaji ATK
+7: Balnagar
+8: B.pally
 
-22: CCkunta SRM
-23: Madanapur
-24: Venkateshwara nandimalla
-25: Sairam ATK
-26: Raghavendra ATK
-27: Mahalakshmi mastipur
-28: karshaka ATK
-29: Balaji ATK
-30: RajaRajeshwari ATK
+9: CCkunta SRM
 
-31: AnanthaLakshmi Acpt
-32: Krishna Acpt
-33: VijayaLakshmi Acpt
-34: RajaRajeshwari Acpt
-35: Mallikarjuna Acpt
-36: Palem
-37: Thummanpet
+10: Devarakadra
 
-38: Anajayya
-39: Rakonda
-40: Thallapally
-41: mogiligidda
-42: Thipdampally
-43: Kurumurthy swamy
-44: Devarakadra
+11: Karshaka ATK
+12: Keshampet
+13: Kondedu
+14: Krishna Acpt
+15: Kurumurthy swamy
 
-100: EXIT
+16: Lingampet Thirupathi Reddy
+
+17: Madanapur
+18: Madharam
+19: Mahalakshmi mastipur
+20: Mallikarjuna Acpt
+21: Manikanta Telkapally
+22: Midjil
+23: Mogiligidda
+
+24: Palem
+25: Pedda Pally Shiva Reddy
+
+26: Rajapur
+27: Rakonda
+28: RajaRajeshwari Acpt
+29: RajaRajeshwari ATK
+30: Raghavendra ATK
+31: Ravi Lingala
+
+32: Shyam Lingala
+33: Sirisawada
+34: Srichakra Nawabpet
+35: Sairam ATK
+
+36: Thallapally
+37: Thipdampally
+38: Thommidhi Rekula
+39: Thummanpet
+
+40: Venkateshwara nandimalla
+41: Veljal
+42: Vijayalakshmi K.Nagula
+43: VijayaLakshmi Acpt
+
+
+0: EXIT

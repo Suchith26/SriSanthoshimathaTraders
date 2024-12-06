@@ -1,3 +1,9 @@
+0:
+  Name: ABORT
+  Address: EXIT
+  State: EXIT
+  GSTIN No: EXIT
+
 1:
   Name: Mahesh Fats & Oils Limited.
   Address: Kattedan
@@ -57,3 +63,10 @@
   Address: NANAJAIUTHUKULI POST, MODAKKURICHI TK,TAMILNADU-638104
   State: TAMILNADU
   GSTIN No: 33AACCS9493E1Z6
+
+11:
+  Name : ROHIT EXTRACTIONS PRIVATE LIMITED
+  Address : Narapally , Hyderabad
+  State : Telangana
+  GSTIN No : 36AABCR0726J1ZH
+

@@ -19,7 +19,7 @@ from docx2pdf import convert
 from bill_generator_2 import billGenerator
 
 
-#stopping here :- append detail to mill sheet completed , import get_int_inputs and apply to all inputs
+#stopping here :- bill gen - downloader,terminal opener of mobile - give a specified location
 #sort the mill , fac lists in alphabetical order
 
 class update():
@@ -59,7 +59,7 @@ class update():
         print("FY 2024-25")
         print('-'*50)
         self.spreadsheet_id = '1nvdutA1w3neqZ57rlE3PH2Fm6ACPr3dKPsnrkEioMJI'  # to fetch sheets
-        self.credentials_file = 'credentials.json'
+        self.credentials_file = 'credentials2.json'
         self.scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive",'https://www.googleapis.com/auth/documents']
         self.creds = ServiceAccountCredentials.from_json_keyfile_name(self.credentials_file, self.scope)
         self.client = gspread.authorize(self.creds)
@@ -156,11 +156,14 @@ class update():
         
         while i==1:
             mill_list = self.get_mills_list()
-
-            j=0    
-            while j<1 or j>len(mill_list):
-                mill_number= j = self.get_integer_input('\n Enter the mill no from above list:-')
+            j=-1    
+            while j<0 or j>len(mill_list):
+                mill_number= j = self.get_integer_input('\n Enter the mill no from above list \n or Enter "0" to EXIT updating detail:-' )
+                if(mill_number == 0):
+                    return 0
+                #! create new mill table option
             
+            #TODO correct the order of input based on detail photo format order 
             mill_name = mill_list[mill_number]
             df = self.load_dataframe_from_sheet(mill_name)
             date = self.get_string_input('\nDate:-')
@@ -169,30 +172,39 @@ class update():
             rate = self.get_integer_input('\nMill_Rate:-')
             cost = rate*weight
 
+            print(f"\n Entered Details for {mill_name}:-")
+            print(f"\nDate - {date} , Bags - {bags} , Weight - {weight} , Rate - {rate}")
+            n = -1
+            while(n<0 or n>1):
+                n = self.get_integer_input("\n\n Check the detail in this line  \nEnter 1 to proceed \nEnter 0 to cancel this mill line")
 
-            new_row = pd.DataFrame([{
-            'BILL NO': bill_no,
-            'FROM': firm,
-            'DATE': date,
-            'BAGS': bags,
-            'WEIGHT': weight,
-            'RATE': rate,
-            'COST': cost,
-            # 'VEHICLE NO': bill_details['VNO'],
-            }])
+            if n==0:
+                print(f"The above line addition to {mill_name} , was cancelled")
 
-            # Concatenate the new row with the existing DataFrame
-            df = pd.concat([df, new_row], ignore_index=True)
-            
-            purchase_total = df['COST'].sum()
-            df.at[0, 'PURCHASE TOTAL'] = purchase_total
-            df.at[0,'BALANCE'] = purchase_total - df.at[0,'PAID TOTAL']
-            
-            self.save_dataframe_to_sheet(df,mill_name)
+            else:
+                new_row = pd.DataFrame([{
+                'BILL NO': bill_no,
+                'FROM': firm,
+                'DATE': date,
+                'BAGS': bags,
+                'WEIGHT': weight,
+                'RATE': rate,
+                'COST': cost,
+                # 'VEHICLE NO': bill_details['VNO'],
+                }])
 
-            print("Mill Append Successfull")
-            mills_updated = mills_updated +','+ mill_name
-            i = self.get_integer_input('1.update another mill in this bill detail \nOR PRESS ANY KEY TO SAVE AND EXIT')
+                # Concatenate the new row with the existing DataFrame
+                df = pd.concat([df, new_row], ignore_index=True)
+                
+                purchase_total = df['COST'].sum()
+                df.at[0, 'PURCHASE TOTAL'] = purchase_total
+                df.at[0,'BALANCE'] = purchase_total - df.at[0,'PAID TOTAL']
+                
+                self.save_dataframe_to_sheet(df,mill_name)
+
+                print("Mill Append Successfull")
+                mills_updated = mills_updated +','+ mill_name
+            i = self.get_integer_input('\n1.Update another mill in this bill detail \nOR Enter ANY number TO SAVE AND EXIT')
 
         return mills_updated
             
@@ -209,6 +221,9 @@ class update():
                 print("The values exist in" , firms[firm])
                 bill_no = result.iloc[0]['BILL NO']
                 mills_updated = self.append_detail_to_mill_table(firms[firm] , bill_no) # add detail to mills tables
+                if not mills_updated:
+                    print("\n no mills updated :) ")
+                    return
                 extras = self.get_integer_input('\nEnter no of bags , if any EXTRAS :- ')
 
                 row_index = result.index[0] #index of that particular bill
@@ -224,9 +239,9 @@ class update():
         return
 
     def detail_update(self):
-        print("update factory , mills after getting detail")
+        # print("update factory , mills after getting detail")
         unload_date = self.get_string_input("Enter the UNLOADING DATE of this vehicle:- ")
-        vno = self.get_string_input("Enter this VEHICLE NUMBER:- ")
+        vno = self.get_string_input("Enter this VEHICLE NUMBER:- ").upper()
         bags = self.get_integer_input("Enter the TOTAL no of BAGS in this vehicle:- ")
         self.check_bill_with_credentials(vno,unload_date,bags)
          
@@ -235,7 +250,7 @@ class update():
         while True:
             mill_list = self.get_mills_list()
             mill_number = self.get_integer_input("Enter the MILL Number:- ")
-            if mill_number == 100:
+            if mill_number == 0:
                 break
             df = self.load_dataframe_from_sheet(mill_list[mill_number])
             print(f'DISPLAYING {mill_list[mill_number]} TABLE :-',df)
@@ -259,7 +274,7 @@ class update():
                 for col, value in zip(target_columns, new_values):
                     first_empty_index = df[col].isna().idxmax()  # Finds the first index with NaN
                     df.at[first_empty_index, col] = value
-                user_input = self.get_integer_input("Enter 1 if you still want to add another amount in SAME MILL\n OR enter ANY KEY to SAVE and EXIT this mill:-")    
+                user_input = self.get_integer_input("Enter 1 if you still want to add another amount in SAME MILL\n OR enter ANY number to SAVE and EXIT this mill:-")    
             
             if user_input!=1:  
                 paid_total = df['AMOUNT PAID'].sum()
@@ -313,7 +328,7 @@ if __name__ == '__main__':
             else:
                 print('New bill not generated or Old bill is not overwrited :)')    
         elif i==2:
-            print("\n \n Updating Detail \n\n")
+            print("\n \n------Updating Detail------\n\n")
             upc.detail_update()
         elif i==3:
             print("\n \n Updating Amount \n\n")

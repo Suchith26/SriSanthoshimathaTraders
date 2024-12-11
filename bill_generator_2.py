@@ -193,7 +193,6 @@ class billGenerator():
         print("Text replacement completed successfully.")
 
     def download_as_pdf(self, document_id, output_file_name):
-        """Download the Google Docs document as a PDF."""
         request = self.drive_service.files().export_media(
             fileId=document_id, mimeType='application/pdf'
         )
@@ -207,7 +206,6 @@ class billGenerator():
         print(f"File downloaded successfully as {output_file_name}")
 
     def delete_document(self, document_id):
-        """Delete the specified Google Docs document from Google Drive."""
         self.drive_service.files().delete(fileId=document_id).execute()
         print(f"Document with ID {document_id} deleted from Google Drive.")
     
@@ -216,7 +214,7 @@ class billGenerator():
             y = json.load(f)
         return y["gmail_password"]
 
-    def mail_pdf(self, pdf_path, sender_email):
+    def mail_pdf(self, pdf_path, sender_email, fac_email):
         """Send the generated PDF via email."""
         if sender_email == 1:
             sender_email = "suchithreddy26@gmail.com"  
@@ -229,7 +227,7 @@ class billGenerator():
         # sender_password = self.get_string_input(f"Enter mail Password to mail from {sender_email}")  # Use an app password for security
         subject = "pdf_path"
 
-        recipient_list = ["suchithreddy26@gmail.com" , "csreddy276@gmail.com" , "suryaprakshreddy@gmail.com" ] #, "shambu.arvapally@gmail.com" , "shankerallakoti@gmail.com"
+        recipient_list = ["suchithreddy26@gmail.com" , "csreddy276@gmail.com" , "suryaprakshreddy@gmail.com" ''',fac_email , "shambu.arvapally@gmail.com" , "shankerallakoti@gmail.com" ''']
         
         recipient_list.remove(sender_email)
 
@@ -237,9 +235,6 @@ class billGenerator():
         #     recipient_list.remove("shambu.arvapally@gmail.com")
         # elif self.thr == 'Gayatri':
         #     recipient_list.remove("shankerallakoti@gmail.com")
-
-        # if self.factory_number == 4:
-        #     recipient_list.append("shyam_solvex@hotmail.com")
         
 
         # Create the email
@@ -468,6 +463,9 @@ class billGenerator():
         print("Mail BILL ?")
         while(mail<0 or mail>2):
             mail = self.get_integer_input("\n1.Yes, MAILL this BIll \n2.No , continue without Mailing \n0.ENTER 0 to ABORT")
+        if "Mail" not in fac_address.keys():
+            print(f'the factory{fac_address} doesnt have mail id')
+            mail = 2
         if not mail:
             print("Aborting....")
             return 0
@@ -475,7 +473,8 @@ class billGenerator():
             sender_email = 0
             while sender_email<1 or sender_email>3:
                 sender_email = self.get_integer_input("sending mail from:\n 1.Suchith\n 2.Sumith\n 3.Surya\n 0.ENTER 0 to ABORT\n")
-            self.mail_pdf(pdf_title, sender_email)
+            fac_email = fac_address['Mail']
+            self.mail_pdf(pdf_title, sender_email , fac_email)
         else:
             print("continuing without mailing")
 

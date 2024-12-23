@@ -16,132 +16,36 @@ from email.mime.base import MIMEBase
 from email import encoders
 
 class billGenerator():
-    
-
-    # def get_integer_input(self,prompt):
-    #     while True:
-    #         user_input = input(prompt)
-    #         if user_input.strip() == "":  # Check if the input is empty
-    #             print("No input provided. Please enter a number.")
-    #             continue
-    #         try:
-    #             return int(user_input)  # Attempt to convert the input to an integer
-    #         except ValueError:
-    #             print("Invalid input. Please enter a valid integer.")
-
-    def get_integer_input(self, prompt):
+    def get_integer_input(self,prompt):
         while True:
             user_input = input(prompt)
-            
-            if user_input == "0": #ABORT CASE
-                return 0
-            
             if user_input.strip() == "":  # Check if the input is empty
                 print("No input provided. Please enter a number.")
                 continue
             try:
-                value = int(user_input)  # Attempt to convert the input to an integer
-                print(f"The input you entered is: {value}")
-                
-                while True:
-                    print("What would you like to do next?")
-                    print("1. Change input")
-                    print("2. Proceed with this valid input")
-                    print("3. Abort BILL")
-                    
-                    option = input("Enter your choice (1/2/3): ")
-                    
-                    if option == "1":
-                        break  # Go back to the main input loop to get new input
-                    elif option == "2":
-                        return value  # Proceed with the valid input
-                    elif option == "3":
-                        return 0  # Return 0
-                    else:
-                        print("Invalid choice. Please select 1, 2, or 3.")
+                return int(user_input)  # Attempt to convert the input to an integer
             except ValueError:
                 print("Invalid input. Please enter a valid integer.")
 
-    def get_string_input(self, prompt):
+    def get_string_input(self,prompt):
         while True:
             user_input = input(prompt).strip()  # Remove leading/trailing whitespace
-            
-            if user_input == "0": #ABORT CASE
-                return 0
-            
             if user_input == "":  # Check if the input is empty
                 print("No input provided. Please enter a non-empty string.")
                 continue
-
-            print(f"The input you entered is: '{user_input}'")
-            while True:
-                print("What would you like to do next?")
-                print("1. Change input")
-                print("2. Proceed with this valid input")
-                print("3. Return 0")
-
-                option = input("Enter your choice (1/2/3): ")
-                if option == "1":
-                    break  # Go back to the main input loop to re-enter the string
-                elif option == "2":
-                    return user_input  # Proceed with the valid input
-                elif option == "3":
-                    return 0  # Return 0
-                else:
-                    print("Invalid choice. Please select 1, 2, or 3.")
-                    
-    def get_float_input(self, prompt):
+            return user_input  # Return the valid, non-empty string
+        
+    def get_float_input(self,prompt):
         while True:
             user_input = input(prompt).strip()  # Remove leading/trailing whitespace
-            
-            if user_input == "0": #ABORT CASE
-                return 0
-            
             if user_input == "":  # Check if the input is empty
                 print("No input provided. Please enter a number.")
                 continue
-
             try:
-                value = float(user_input)  # Attempt to convert input to a float
-                print(f"The input you entered is: {value}")
-                while True:
-                    print("What would you like to do next?")
-                    print("1. Change input")
-                    print("2. Proceed with this valid input")
-                    print("3. Return 0")
-
-                    option = input("Enter your choice (1/2/3): ")
-                    if option == "1":
-                        break  # Go back to the main input loop to re-enter the float
-                    elif option == "2":
-                        return value  # Proceed with the valid input
-                    elif option == "3":
-                        return 0  # Return 0
-                    else:
-                        print("Invalid choice. Please select 1, 2, or 3.")
+                user_input = float(user_input)  # Attempt to convert input to a float
+                return user_input  # Exit the loop if conversion is successful
             except ValueError:
                 print("Invalid input. Please enter a valid float.")
-
-
-    # def get_string_input(self,prompt):
-    #     while True:
-    #         user_input = input(prompt).strip()  # Remove leading/trailing whitespace
-    #         if user_input == "":  # Check if the input is empty
-    #             print("No input provided. Please enter a non-empty string.")
-    #             continue
-    #         return user_input  # Return the valid, non-empty string
-        
-    # def get_float_input(self,prompt):
-    #     while True:
-    #         user_input = input(prompt).strip()  # Remove leading/trailing whitespace
-    #         if user_input == "":  # Check if the input is empty
-    #             print("No input provided. Please enter a number.")
-    #             continue
-    #         try:
-    #             user_input = float(user_input)  # Attempt to convert input to a float
-    #             return user_input  # Exit the loop if conversion is successful
-    #         except ValueError:
-    #             print("Invalid input. Please enter a valid float.")
 
     def __init__(self):
         print('BILL GENERATOR - CLOUD')
@@ -278,12 +182,12 @@ class billGenerator():
         and optionally delete the copied document.
         """
 
-        bill_no = vehicle_no = date = bags = through = type = qtls = actual_rate = self.factory_number = sheet_no = -1
-        print('billing from - ')
+        bill_no = vehicle_no = date = bags = through = qtls = actual_rate = self.factory_number = sheet_no = -1
+        print('\nbilling from - ')
         sheet_dict = {1:'SRM', 2:'SST' , 0:'ABORT'}
         while sheet_no<0 or sheet_no>2:
             print(sheet_dict)
-            sheet_no = self.get_integer_input("\nEnter the Firm number")
+            sheet_no = self.get_integer_input("Enter the Firm number :-")
 
         if not sheet_no:
             print("\nAborting.....")
@@ -291,21 +195,21 @@ class billGenerator():
         elif sheet_no == 1:
             self.template_document_id = '1rrIgNAXiTVNQThz-HQozpIJpuWkUjP62AdfqGEHs1-I'
             title_tail = 'SRM'
-            print("\nBilling from MILL (SRM) \n")
+            print("----Billing from MILL (SRM) ----\n")
         else:
             self.template_document_id = '1xKAGWHvRkgH2OWP-e4ucUv6r9LkZtCdrSAigcGnVu4A'
             title_tail = 'SST' 
-            print("\nBilling from TRADERS (SST) \n")
+            print("----Billing from TRADERS (SST) ----\n")
         
 
-        print("SELECT THE FACTORY NUMBER")
+        print("\nFACTORIES:-")
         with open('factory_config.yaml', 'r') as file:
             factory_names = yaml.safe_load(file)
         
         while self.factory_number<0 or self.factory_number>len(factory_names):
             for self.factory_number in factory_names:
                 print(self.factory_number,factory_names[self.factory_number]['Name'])
-            self.factory_number = self.get_integer_input('\nEnter factory NUMBER from above list \nOR Enter 0 to ABORT:-')
+            self.factory_number = self.get_integer_input('\nEnter FACTORY NUMBER from above list \nOR Enter 0 to ABORT:-')
 
         if not self.factory_number:
             print("Aborting....")
@@ -316,12 +220,26 @@ class billGenerator():
         for key in fac_address:
             reciever_address = reciever_address + key + ':' + fac_address[key] + '\n'        
 
-        bill_no = self.get_integer_input("enter BILL NO \nOR Enter 0 to ABORT:- ")
+        bill_no = self.get_integer_input("\nEnter BILL NO \nOR Enter 0 to ABORT:- ")
         if not bill_no:
             print("Aborting....")
             return 0
         
-        vehicle_no = self.get_string_input("enter VEHICLE NO\nOR Enter 0 to ABORT:- ")
+
+        while through<0 or through>2:
+            through = self.get_integer_input("\nTHROUGH :   \n1.Annapurna      2.Gayatri \nOR Enter 0 to ABORT:- ")
+            
+        if not through:
+            print("Aborting....")
+            return 0
+        
+        if through == 1:
+            self.thr = 'Annapurna'
+        else:
+            self.thr = 'Gayatri'    
+
+
+        vehicle_no = self.get_string_input("\nEnter VEHICLE NO\nOR Enter 0 to ABORT:- ")
         if not vehicle_no:
             print("Aborting....")
             return 0
@@ -336,7 +254,7 @@ class billGenerator():
             print("Aborting....")
             return 0
 
-        qtls = self.get_float_input("\nEnter WEIGHT in qtls\nOR Enter 0 to ABORT:- ")  # Remove leading/trailing whitespace
+        qtls = self.get_float_input("\nEnter WEIGHT(qtls)\nOR Enter 0 to ABORT:- ") 
         if not qtls:
             print("Aborting....")
             return 0
@@ -347,30 +265,52 @@ class billGenerator():
             print("Aborting....")
             return 0
         
-        while through<0 or through>2:
-            through = self.get_integer_input("\nThrough :   \n1.Annapurna      2.Gayatri \nOR Enter 0 to ABORT:- ")
+        print("="*30)
+
+        while True:
+            print("\nBill Details Entered :-\n")
+            print(f"1.Bill NO - {bill_no} \n2.Vehicle NO - {vehicle_no} \n3.Date - {date} \n4.Through - {self.thr} \n5.Bags - {bags} \n6.Weight - {qtls} \n7.Rate - {actual_rate} \n8.No CHANGES \n")
+            field = 0
+            while field<1 or field>8:
+                field = self.get_integer_input("Enter The Number of field you want to change:-")
             
-        if not through:
-            print("Aborting....")
-            return 0
-        
-        if through == 1:
-            self.thr = 'Annapurna'
-        else:
-            self.thr = 'Gayatri'    
+            if field==8:
+                print("no more changes..:)")
+                break
 
-      
-        while type<1 or type>2:
-            type = self.get_integer_input("Bag Type :   1.Plastic      2.Jute \nOR Enter 0 to ABORT:- ")
-        
-        if not type:
-            print("Aborting....")
-            return 0
-        if type == 1:
-            bag_type = 'Plastic'
-        else:
-            bag_type = 'Jute'
+            elif field==1:
+                print("old bill_no:-",bill_no)
+                bill_no = self.get_integer_input("New bill no:-")
+                
+            elif field==2:
+                print("old vehicle_no:-",vehicle_no)
+                vehicle_no = self.get_string_input("New vehicle no:-")
 
+            elif field==3:
+                print("old date:-",date)
+                date = self.get_string_input("New date:-")
+
+            elif field==4:
+                print("old through:-",self.thr)
+                self.thr = 0
+                while through<1 or through>2:
+                    through = self.get_integer_input("\nThrough :   \n1.Annapurna      2.Gayatri ")
+                if through == 1:
+                    self.thr = 'Annapurna'
+                else:
+                    self.thr = 'Gayatri'
+
+            elif field==5:
+                print("old bags:-",bags)
+                bags = self.get_integer_input("New bags:-")
+            elif field==6:
+                print("old weight:-",qtls)
+                qtls = self.get_float_input("New weight:-")
+            elif field==7:
+                print("old rate:-",actual_rate)
+                actual_rate = self.get_integer_input("New Rate:-")
+            
+                
         # Rate calculations
         rate=(actual_rate*100)/105
         rate=round(rate,2)
@@ -386,7 +326,6 @@ class billGenerator():
                 "DATE":date,
                 "THR":self.thr,
                 "BAGS":bags,
-                "TYPE":bag_type,
                 "QTL":qtls,
                 "RATE":rate,
                 "ACTUAL RATE":actual_rate,
@@ -403,7 +342,6 @@ class billGenerator():
             '{{DATE}}': str(date),
             '{{THR}}': str(self.thr),
             '{{BAGS}}': str(bags),
-            '{{TYPE}}': str(bag_type),
             '{{QTL}}': str(qtls),
             '{{RATE}}': str(rate),
             '{{ACTUAL RATE}}': str(actual_rate),
@@ -462,7 +400,7 @@ class billGenerator():
         mail = -1
         print("Mail BILL ?")
         while(mail<0 or mail>2):
-            mail = self.get_integer_input("\n1.Yes, MAILL this BIll \n2.No , continue without Mailing \n0.ENTER 0 to ABORT")
+            mail = self.get_integer_input("\n1.Yes, MAILL this BIll \n2.No , continue without Mailing \n0.ENTER 0 to ABORT :-")
         if "Mail" not in fac_address.keys():
             print(f'the factory{fac_address} doesnt have mail id')
             mail = 2
@@ -476,8 +414,7 @@ class billGenerator():
             fac_email = fac_address['Mail']
             self.mail_pdf(pdf_title, sender_email , fac_email)
         else:
-            print("continuing without mailing")
-
+            print("continuing without mailing...")
         return context
 
 # Example usage of the class

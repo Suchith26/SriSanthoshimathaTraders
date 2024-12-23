@@ -90,22 +90,33 @@ class update():
         sheet.update([df.columns.values.tolist()] + df.values.tolist())
 
     def get_mills_list(self):
-        
-        with open('mills.yaml','r') as f:
-            mill_list = yaml.safe_load(f)  
-        mills_per_row = 3
-        mills = list(mill_list.items())  # Convert dict items to a list for easier iteration
+        with open('mills.yaml', 'r') as f:
+            mill_list = yaml.safe_load(f)
+
+        mills_per_row = 1
+        mills = sorted(mill_list.items(), key=lambda x: x[0])  # Sort items alphabetically by key
 
         key_width = 5  # Width for the key
         value_width = 30  # Width for the value
         print('\n\n MILLS LIST \n')
+
+        current_initial = ""  # Track the initial character of the current entries
+
         for i in range(0, len(mills), mills_per_row):
-                row_mills = []
-                for j in range(mills_per_row):
-                    if i + j < len(mills):  # Check if the index is within the bounds
-                        key, value = mills[i + j]
-                        row_mills.append(f"{key}: {value.ljust(value_width)}")  # Left justify values
-                print("".join(row_mills))
+            row_mills = []
+            for j in range(mills_per_row):
+                if i + j < len(mills):  # Check if the index is within the bounds
+                    key, value = mills[i + j]
+                    row_mills.append(f"{key}: {value.ljust(value_width)}")  # Left justify values
+
+                    # Check if we moved to a new alphabet section
+                    initial = value[0].upper()
+                    if initial != current_initial:
+                        current_initial = initial
+                        if i + j > 0:  # Ensure we skip the first iteration
+                            print('\n')  # Add two-line space between alphabet sections
+
+            print("".join(row_mills))
         return mill_list
 
     def check_bill_redundancy(self,df,bill_no): #check if bill already exists in fac sheet
@@ -158,7 +169,7 @@ class update():
             mill_list = self.get_mills_list()
             j=-1    
             while j<0 or j>len(mill_list):
-                mill_number= j = self.get_integer_input('\n Enter the mill no from above list \n or Enter "0" to EXIT updating detail:-' )
+                mill_number= j = self.get_integer_input('\nEnter the mill no from above list:-' )
                 if(mill_number == 0):
                     return 0
                 #! create new mill table option
@@ -240,9 +251,9 @@ class update():
 
     def detail_update(self):
         # print("update factory , mills after getting detail")
-        unload_date = self.get_string_input("Enter the UNLOADING DATE of this vehicle:- ")
-        vno = self.get_string_input("Enter this VEHICLE NUMBER:- ").upper()
-        bags = self.get_integer_input("Enter the TOTAL no of BAGS in this vehicle:- ")
+        unload_date = self.get_string_input("UNLOADING DATE:- ")
+        vno = self.get_string_input("VEHICLE NUMBER:- ").upper()
+        bags = self.get_integer_input("TOTAL BAGS:- ")
         self.check_bill_with_credentials(vno,unload_date,bags)
          
     def amount_update(self): # update totals too, hardcode
@@ -254,7 +265,7 @@ class update():
                 break
             df = self.load_dataframe_from_sheet(mill_list[mill_number])
             print(f'DISPLAYING {mill_list[mill_number]} TABLE :-',df)
-            user_input = self.get_integer_input("->Enter 1 if you still want to update this mill OR \n->Enter 2 to EXIT back to MAIN MENU OR \n->Enter ANY KEY to see MILL LIST :-")
+            user_input = self.get_integer_input("->1. If you still want to update this mill \n->2. EXIT back to MAIN MENU\n->3. See MILL LIST :-")
             
             if user_input == 2:
                 break
@@ -316,8 +327,7 @@ if __name__ == '__main__':
         i=0
         while i<1 or i>7:
             print("\nMAIN MENU :\n1.Generate Bill \n2.Detail Update \n3.Amount Update \n4.Display Mill Data \n5.Display Factory Data \n6.Cancel bill in fac sheet \n7.EXIT")
-            print('type a number in 1,2,3,4,5,6')
-            i = upc.get_integer_input("Choose a operation:- \n")
+            i = upc.get_integer_input("Type a number in 1,2,3,4,5,6:-\n")
 
         if i==1:
             print("\n \n Generating New Bill \n\n")
@@ -325,6 +335,9 @@ if __name__ == '__main__':
             bill_details = bgc.generate_bill()
             if bill_details:
                 upc.append_bill_to_factory_sheet(bill_details)
+                print('\nBill Details :-')
+                for key in bill_details:
+                    print(key ,":-",bill_details[key] )
             else:
                 print('New bill not generated or Old bill is not overwrited :)')    
         elif i==2:
@@ -336,11 +349,14 @@ if __name__ == '__main__':
         elif i==4:# print mill sheet
             while True:
                 mill_list = upc.get_mills_list()
-                mill_number = upc.get_integer_input('\nEnter the MILL NUMBER to get mill details\n')
-                print(f'TABLE OF {mill_list[mill_number]} :-')
-                print(upc.load_dataframe_from_sheet(mill_list[mill_number]))
-                print('-'*50)
-                exit = upc.get_integer_input('\nPress 1 to see OTHER mills tables\n Press ANY KEY to EXIT')
+                mill_number = upc.get_integer_input('\nEnter the MILL NUMBER:-\n')
+                if not mill_number:
+                    print("Exited !!!")
+                else:
+                    print(f'TABLE OF {mill_list[mill_number]} :-')
+                    print(upc.load_dataframe_from_sheet(mill_list[mill_number]))
+                    print('-'*50)
+                exit = upc.get_integer_input('\n1. To see OTHER mills tables\n2. Press ANY KEY to EXIT')
                 if exit!=1:
                     break
         elif i==5:# print factory sheet
@@ -353,7 +369,7 @@ if __name__ == '__main__':
                 df = upc.load_dataframe_from_sheet(sheet_dict[sheet_no])
                 print(f'FACTORY TABLE of {sheet_dict[sheet_no]}')
                 print(df)
-                exit = upc.get_integer_input('\nPress 1 to see OTHER Factory tables\n Press ANY KEY to EXIT')
+                exit = upc.get_integer_input('\n1. To see OTHER Factory tables\n2. Press ANY KEY to EXIT')
                 if exit!=1:
                     break
         elif i ==6:
